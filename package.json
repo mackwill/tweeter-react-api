@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "./node_modules/.bin/nodemon -L server.js ./routes"
   },
   "author": "",
   "license": "ISC",
@@ -14,5 +15,8 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "pg": "^8.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }

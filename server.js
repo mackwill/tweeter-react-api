@@ -7,6 +7,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const tweets = require("./routes/tweets");
+const users = require("./routes/users");
 
 // PG database client/connection setup
 const { Pool } = require("pg");
@@ -24,6 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
 app.use("/api", tweets(db));
+app.use("/api", users(db));
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
