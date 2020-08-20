@@ -16,7 +16,7 @@ module.exports = (db) => {
       })
       .catch((err) => {
         res.status(500);
-        console.err("error", err);
+        console.log("error", err);
       });
   });
 
