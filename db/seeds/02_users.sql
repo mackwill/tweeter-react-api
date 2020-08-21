@@ -14,7 +14,7 @@ VALUES
     'Nicolas',
     'Cage',
     'nicolasCage@gmail.com',
-    '$2a$10$FB/BOAVhpuLvpOREQVmvmezD4ED/.JBIDRh70tGevYzYzQgFId2u.',
+    'password',
     'https://i.imgur.com/73hZDYK.png',
     '2018-05-04 09:30:20-07'
   ),
@@ -23,7 +23,7 @@ VALUES
     'Skyler',
     'Peck',
     'skylerPeck@gmail.com',
-    '$2a$10$FB/BOAVhpuLvpOREQVmvmezD4ED/.JBIDRh70tGevYzYzQgFId2u.',
+    'password',
     'https://i.imgur.com/73hZDYK.png',
     '2019-10-10 09:30:20-07'
   ),
@@ -32,7 +32,7 @@ VALUES
     'Kasper',
     'King',
     'kasperKing@gmail.com',
-    '$2a$10$FB/BOAVhpuLvpOREQVmvmezD4ED/.JBIDRh70tGevYzYzQgFId2u.',
+    'password',
     'https://i.imgur.com/73hZDYK.png',
     '2018-12-29 09:30:20-07'
   ),
@@ -41,7 +41,7 @@ VALUES
     'Ferris',
     'Strickland',
     'ferrisStrickland@gmail.com',
-    '$2a$10$FB/BOAVhpuLvpOREQVmvmezD4ED/.JBIDRh70tGevYzYzQgFId2u.',
+    'password',
     'https://i.imgur.com/73hZDYK.png',
     '2019-12-11 09:30:20-07'
   ),
@@ -50,7 +50,7 @@ VALUES
     'Tiger',
     'Rosario',
     'tigerRosario@gmail.com',
-    '$2a$10$FB/BOAVhpuLvpOREQVmvmezD4ED/.JBIDRh70tGevYzYzQgFId2u.',
+    'password',
     'https://i.imgur.com/73hZDYK.png',
     '2019-08-19 09:30:20-07'
   ),
@@ -59,7 +59,7 @@ VALUES
     'Rinah',
     'Dejesus',
     'rinahDejesus@gmail.com',
-    '$2a$10$FB/BOAVhpuLvpOREQVmvmezD4ED/.JBIDRh70tGevYzYzQgFId2u.',
+    'password',
     'https://i.imgur.com/73hZDYK.png',
     '2020-07-23 09:30:20-07'
   );
