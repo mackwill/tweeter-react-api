@@ -12,18 +12,14 @@ async function authenticate({ username, password, users }) {
   // console.log("hashed pass: ", hashedPassword);
 
   const user = users.find((u) => {
-    // console.log("u: ", u);
-    // console.log("password check: ", u.password === password);
-    // console.log("compare: ", bcrypt.compareSync(u.password, hashedPassword));
     return u.username === username && u.password === password;
   });
 
-  console.log("user: ", user);
-
   if (!user) throw "The username or password you have entered is incorrect!";
 
-  const token = jwt.sign({ data: username }, secret, { expiresIn: 60 * 60 });
-  console.log("token: ", token);
+  const token = jwt.sign({ username: username }, secret, {
+    expiresIn: 60 * 60,
+  });
   return {
     ...omitPassword(user),
     token,

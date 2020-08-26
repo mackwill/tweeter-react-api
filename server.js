@@ -7,6 +7,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const jwt = require("./helpers/jwt");
 const errorHandler = require("./helpers/error-handler");
+const cookieSession = require("cookie-session");
 
 const tweets = require("./routes/tweets");
 const users = require("./routes/users");
@@ -24,6 +25,13 @@ app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(
+  cookieSession({
+    name: "session",
+    keys: ["key1", "key2"],
+  })
+);
 
 // use JWT authentication to secure the API
 app.use(jwt());
