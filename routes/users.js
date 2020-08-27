@@ -1,7 +1,9 @@
 const router = require("express").Router();
 const expressJwt = require("express-jwt");
 const jwt = require("jsonwebtoken");
-const authenticate = require("../users/user.service");
+const authenticateModule = require("../users/user.service");
+const authenticate = authenticateModule.authenticate;
+const createRegisterToken = authenticateModule.createRegisterToken;
 const authenticateToken = require("../helpers/authenticateToken");
 require("dotenv").config();
 const secret = process.env.TOKEN_SECRET;
@@ -38,7 +40,7 @@ module.exports = (db) => {
       })
       .catch((err) => {
         res.status(500);
-        res.send(err);
+        res.json(err);
         console.error("Error: ", err);
       });
   });
@@ -60,7 +62,8 @@ module.exports = (db) => {
       })
       .catch((err) => {
         res.status(500);
-        console.error("Error: ", err);
+        console.error("Super Error: ", err);
+        res.end();
       });
   });
 
@@ -87,8 +90,17 @@ module.exports = (db) => {
       )
       .then((data) => {
         console.log("server datta: ", data.rows);
+        return createRegisterToken(data.rows);
+      })
+      .then((user) => {
+        console.log("user after register: ", user);
+        req.session.userId = user.id;
+        req.session.token = user.token;
+        return user;
+      })
+      .then((user) => {
         res.status(200);
-        res.json(data.rows);
+        res.json(user);
       })
       .catch((err) => {
         res.status(500);
