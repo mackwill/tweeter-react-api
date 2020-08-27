@@ -6,7 +6,13 @@ const jwt = () => {
   console.log("got  here");
   console.log("secret: ", secret);
   return expressJwt({ secret, algorithms: ["HS256"] }).unless({
-    path: ["/api/tweets", "/api/users", "/api/login", "/api/logout"],
+    path: [
+      "/api/tweets",
+      "/api/users",
+      "/api/login",
+      "/api/logout",
+      "/api/register",
+    ],
   });
 };
 

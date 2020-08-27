@@ -32,13 +32,13 @@ module.exports = (db) => {
             });
             returnObj["currentUser"] = current[0];
           });
-          console.log("VERIFICATION: REQ.USER: ", req.user);
         }
         res.status(200);
         res.json(returnObj);
       })
       .catch((err) => {
         res.status(500);
+        res.send(err);
         console.error("Error: ", err);
       });
   });
@@ -61,6 +61,39 @@ module.exports = (db) => {
       .catch((err) => {
         res.status(500);
         console.error("Error: ", err);
+      });
+  });
+
+  router.put("/register", (req, res) => {
+    console.log("req.body: ", req.body);
+
+    const {
+      first_name,
+      last_name,
+      username,
+      email,
+      password,
+      profile_picture_url,
+    } = req.body;
+    return db
+      .query(
+        `
+    INSERT INTO users (username, first_name, last_name, email, password, profile_picture_url)
+    VALUES
+      ($1, $2, $3, $4, $5, $6)
+    RETURNING *;
+    `,
+        [username, first_name, last_name, email, password, profile_picture_url]
+      )
+      .then((data) => {
+        console.log("server datta: ", data.rows);
+        res.status(200);
+        res.json(data.rows);
+      })
+      .catch((err) => {
+        res.status(500);
+        console.log("Error: ", err);
+        res.end();
       });
   });
 
