@@ -1,69 +1,86 @@
 const router = require("express").Router();
+const database = require("../helpers/database");
 const expressJwt = require("express-jwt");
 const jwt = require("jsonwebtoken");
-const authenticateModule = require("../users/user.service");
-const authenticate = authenticateModule.authenticate;
-const createRegisterToken = authenticateModule.createRegisterToken;
-const authenticateToken = require("../helpers/authenticateToken");
+// const authenticateModule = require("../users/user.service");
+// const authenticate = authenticateModule.authenticate;
+// const createRegisterToken = authenticateModule.createRegisterToken;
+const authenticate = require("../helpers/authenticateToken");
 require("dotenv").config();
 const secret = process.env.TOKEN_SECRET;
 
 module.exports = (db) => {
-  router.get("/users", (req, res) => {
-    console.log("session.user: ", req.session.userId);
+  const getUserByUsername = (username) => {
+    console.log("thios", username);
+    return db
+      .query(
+        `
+      SELECT * FROM users 
+      WHERE username = $1;
+      `,
+        [`${username}`]
+      )
+      .then((res) => res.rows[0])
+      .catch((error) => console.log("error ", error));
+  };
+
+  const getUserById = (id) => {
     return db
       .query(
         `
     SELECT * FROM users
-    `
+    WHERE id = $1
+    `,
+        [id]
       )
-      .then((data) => {
-        const returnObj = {
-          users: data.rows,
-        };
+      .then((res) => res.rows[0])
+      .catch((error) => res.status(500));
+  };
 
-        if (req.session.token) {
-          console.log("data: ", data.rows);
-          jwt.verify(req.session.token, secret, (err, user) => {
-            if (err) {
-              return res.status(403);
-            }
-            req.user = req.session.userId;
-            current = data.rows.filter((user) => {
-              return user.id === req.session.userId;
-            });
-            returnObj["currentUser"] = current[0];
-          });
+  const login = (username, password) => {
+    console.log("username", username);
+
+    return getUserByUsername(username)
+      .then((user) => {
+        if (user.password === password) {
+          return user;
         }
-        res.status(200);
-        res.json(returnObj);
+        throw new Error("Invalid Password");
       })
-      .catch((err) => {
+      .catch((error) => {
         res.status(500);
-        res.json(err);
-        console.error("Error: ", err);
+        res.send("Invalid Login");
       });
+  };
+
+  router.get("/users", authenticate, (req, res) => {
+    console.log("session.user: ", req.user);
+    if (req.user) {
+      getUserById(req.user.id)
+        .then((data) => res.send({ data }))
+        .catch((error) => {
+          res.status(500);
+          res.json(error);
+          console.error("Error: ", err);
+        });
+    }
   });
 
   router.post("/login", (req, res) => {
-    console.log("req.body: ", req.body);
-    return authenticate(req.body)
+    const { username, password } = req.body;
+    login(username, password)
       .then((user) => {
-        console.log("user  in users.js: ", user);
-
-        req.session.userId = user.id;
-        req.session.token = user.token;
-        // console.log("session: ", req.session);
-        return user;
-      })
-      .then((user) => {
+        if (!user) {
+          throw new Error();
+        }
+        const accessToken = jwt.sign(user, secret);
+        req.session.token = accessToken;
+        res.json({ user, accessToken });
         res.status(200);
-        res.json(user);
       })
-      .catch((err) => {
+      .catch((error) => {
         res.status(500);
-        console.error("Super Error: ", err);
-        res.end();
+        res.send("Error logging in");
       });
   });
 

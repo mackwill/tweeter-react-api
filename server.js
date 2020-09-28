@@ -19,6 +19,8 @@ const dbParams = require("./config/db.config");
 const db = new Pool(dbParams);
 db.connect();
 
+module.exports = db;
+
 const app = express();
 
 app.use(cors());

@@ -19,7 +19,8 @@
     "express-jwt": "^6.0.0",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.3.0",
-    "rootpath": "^0.1.2"
+    "rootpath": "^0.1.2",
+    "typescript": "^4.0.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
