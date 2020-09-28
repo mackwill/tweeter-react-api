@@ -5,12 +5,9 @@ const PORT = process.env.PORT || 3002;
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const jwt = require("./helpers/jwt");
-const errorHandler = require("./helpers/error-handler");
 const cookieSession = require("cookie-session");
 
-const tweets = require("./routes/tweets");
-const users = require("./routes/users");
+const app = express();
 
 // PG database client/connection setup
 const { Pool } = require("pg");
@@ -20,8 +17,6 @@ const db = new Pool(dbParams);
 db.connect();
 
 module.exports = db;
-
-const app = express();
 
 app.use(cors());
 
@@ -35,14 +30,12 @@ app.use(
   })
 );
 
-// use JWT authentication to secure the API
-app.use(jwt());
+const tweets = require("./routes/tweets");
+const users = require("./routes/users");
 
 // Routes
-app.use("/api", tweets(db));
-app.use("/api", users(db));
-
-app.use(errorHandler);
+app.use("/api", tweets());
+app.use("/api", users());
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

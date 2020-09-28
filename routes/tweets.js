@@ -1,46 +1,35 @@
 const router = require("express").Router();
+const database = require("../database");
 
-module.exports = (db) => {
+module.exports = () => {
   router.get("/tweets", (req, res) => {
-    return db
-      .query(
-        `
-      SELECT tweets.*, users.first_name, users.last_name, users.username, users.profile_picture_url FROM tweets 
-      JOIN users ON user_id = users.id
-      ORDER BY tweet_date DESC
-      `
-      )
-      .then((data) => {
+    console.log("herere");
+    return database
+      .getAllTweets()
+      .then((tweets) => {
         res.status(200);
-        res.json(data.rows);
+        res.json(tweets);
       })
-      .catch((err) => {
+      .catch((error) => {
         res.status(500);
-        console.log("error", err);
+        res.send(error);
+        console.log("Error getting tweets: ", error);
       });
   });
 
   router.put("/tweets", (req, res) => {
-    console.log("req", req.body);
-    const { user_id, content, tweet_date } = req.body;
+    const { user_id, content } = req.body;
 
-    return db
-      .query(
-        `
-    INSERT INTO tweets (user_id, content)
-    VALUES ($1, $2)
-    RETURNING *;
-    `,
-        [user_id, content]
-      )
-
-      .then((data) => {
+    return database
+      .newTweet(user_id, content)
+      .then((tweet) => {
         res.status(200);
-        res.json(data.rows);
+        res.json(tweet);
       })
-      .catch((err) => {
+      .catch((error) => {
         res.status(500);
-        console.error("Error: ", err);
+        console.error("Error creating new tweet: ", error);
+        res.send(error);
       });
   });
 
