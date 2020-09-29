@@ -9,7 +9,7 @@ module.exports = () => {
   const login = (username, password) => {
     console.log("username", username);
 
-    return databse
+    return database
       .getUserByUsername(username)
       .then((user) => {
         if (user.password === password) {
@@ -23,10 +23,11 @@ module.exports = () => {
       });
   };
 
+  // router.get("/users", authenticate, (req, res) => {
   router.get("/users", authenticate, (req, res) => {
     console.log("session.user: ", req.user);
     if (req.user) {
-      database
+      return database
         .getUserById(req.user.id)
         .then((data) => res.send({ data }))
         .catch((error) => {
@@ -35,6 +36,7 @@ module.exports = () => {
           console.error("Error: ", err);
         });
     }
+    res.end();
   });
 
   router.post("/login", (req, res) => {

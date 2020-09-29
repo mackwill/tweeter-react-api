@@ -4,7 +4,7 @@ const getUserByUsername = (username) => {
   return db
     .query(
       `
-    SELECT * FROM users 
+    SELECT id, username, first_name AS "firstName", last_name AS "lastName", email, password, profile_picture_url AS "profilePictureUrl", date_joined AS "dateJoined" FROM users 
     WHERE username = $1;
     `,
       [`${username}`]
@@ -19,7 +19,7 @@ const getUserById = (id) => {
   return db
     .query(
       `
-  SELECT * FROM users
+  SELECT id, username, first_name AS "firstName", last_name AS "lastName", email, password, profile_picture_url AS "profilePictureUrl", date_joined AS "dateJoined" FROM users 
   WHERE id = $1
   `,
       [id]
@@ -69,8 +69,6 @@ const getAllTweets = () => {
   `
     )
     .then((res) => {
-      console.log("res.rows: ", res.rows);
-
       return res.rows;
     })
     .catch((error) => console.log("error: ", error));

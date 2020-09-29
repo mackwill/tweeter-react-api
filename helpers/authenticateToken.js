@@ -4,7 +4,8 @@ const secret = process.env.TOKEN_SECRET;
 
 const authenticate = (req, res, next) => {
   const token = req.session.token;
-  if (token === null) return res.sendStatus(401);
+
+  if (token === undefined) return res.sendStatus(401);
 
   jwt.verify(token, secret, (err, user) => {
     if (err) return res.sendStatus(403);
