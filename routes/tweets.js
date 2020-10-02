@@ -18,13 +18,18 @@ module.exports = () => {
   });
 
   router.put("/tweets", (req, res) => {
-    const { user_id, content } = req.body;
+    const { tweetContent, userId } = req.body;
 
     return database
-      .newTweet(user_id, content)
-      .then((tweet) => {
+      .newTweet(tweetContent, userId)
+      .then(() => {
+        return database.getAllTweets();
+      })
+
+      .then((tweets) => {
+        console.log("tweets:", tweets);
         res.status(200);
-        res.json(tweet);
+        res.json(tweets);
       })
       .catch((error) => {
         res.status(500);

@@ -60,19 +60,21 @@ module.exports = () => {
   router.put("/register", (req, res) => {
     console.log("req.body: ", req.body);
 
-    return database
-      .getUserByUsername(req.body.username)
-      .then((existingUser) => {
-        if (existingUser) {
-          throw new Error("That username already exists");
+    Promise.all([
+      Promise.resolve(database.getUserByUsername(req.body.username)),
+      Promise.resolve(database.getUserByEmail(req.body.email)),
+    ])
+      .then((all) => {
+        if (all[0] || all[1]) {
+          throw new Error("That username or email already exists");
         }
         return database.registerUser(req.body);
       })
       .then((user) => {
+        console.log("user: ", user);
         if (!user) {
           throw new Error("Error registering user");
         }
-
         const accessToken = jwt.sign(user, secret);
         req.session.token = accessToken;
         res.json({ user, accessToken });

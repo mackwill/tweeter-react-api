@@ -15,6 +15,21 @@ const getUserByUsername = (username) => {
 
 exports.getUserByUsername = getUserByUsername;
 
+const getUserByEmail = (email) => {
+  return db
+    .query(
+      `
+  SELECT * FROM users
+  WHERE email = $1
+  `,
+      [email]
+    )
+    .then((res) => res.rows[0])
+    .catch((error) => console.log("No user found with that email", error));
+};
+
+exports.getUserByEmail = getUserByEmail;
+
 const getUserById = (id) => {
   return db
     .query(
@@ -31,13 +46,14 @@ const getUserById = (id) => {
 exports.getUserById = getUserById;
 
 const registerUser = (newUser) => {
+  console.log("new user:", newUser);
   const {
-    first_name,
-    last_name,
+    firstName,
+    lastName,
     username,
     email,
     password,
-    profile_picture_url,
+    profilePictureUrl,
   } = newUser;
 
   return db
@@ -48,11 +64,9 @@ VALUES
   ($1, $2, $3, $4, $5, $6)
 RETURNING *;
 `,
-      [username, first_name, last_name, email, password, profile_picture_url]
+      [username, firstName, lastName, email, password, profilePictureUrl]
     )
-    .then((data) => {
-      console.log("server datta: ", data.rows);
-    })
+    .then((res) => res.rows[0])
     .catch((error) => console.log("Error: ".error));
 };
 
@@ -76,7 +90,7 @@ const getAllTweets = () => {
 
 exports.getAllTweets = getAllTweets;
 
-const newTweet = (userId, content) => {
+const newTweet = (tweetContent, userId) => {
   return db
     .query(
       `
@@ -84,7 +98,7 @@ const newTweet = (userId, content) => {
   VALUES ($1, $2)
   RETURNING *;
   `,
-      [user_id, content]
+      [userId, tweetContent]
     )
     .then((res) => res.rows[0]);
 };
