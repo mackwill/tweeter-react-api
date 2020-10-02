@@ -19,7 +19,7 @@ module.exports = () => {
       })
       .catch((error) => {
         res.status(500);
-        res.send("Invalid Login");
+        res.send("Invalid Login: ", error);
       });
   };
 

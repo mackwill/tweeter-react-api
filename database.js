@@ -10,7 +10,10 @@ const getUserByUsername = (username) => {
       [`${username}`]
     )
     .then((res) => res.rows[0])
-    .catch((error) => console.log("error ", error));
+    .catch((error) => {
+      console.log("error ", error);
+      throw new Error(error);
+    });
 };
 
 exports.getUserByUsername = getUserByUsername;
@@ -25,7 +28,10 @@ const getUserByEmail = (email) => {
       [email]
     )
     .then((res) => res.rows[0])
-    .catch((error) => console.log("No user found with that email", error));
+    .catch((error) => {
+      console.log("No user found with that email", error);
+      throw new Error(error);
+    });
 };
 
 exports.getUserByEmail = getUserByEmail;
@@ -40,7 +46,10 @@ const getUserById = (id) => {
       [id]
     )
     .then((res) => res.rows[0])
-    .catch((error) => res.status(500));
+    .catch((error) => {
+      console.log("Error: ", error);
+      throw new Error(error);
+    });
 };
 
 exports.getUserById = getUserById;
@@ -67,7 +76,10 @@ RETURNING *;
       [username, firstName, lastName, email, password, profilePictureUrl]
     )
     .then((res) => res.rows[0])
-    .catch((error) => console.log("Error: ".error));
+    .catch((error) => {
+      console.log("Error: ", error);
+      throw new Error(error);
+    });
 };
 
 exports.registerUser = registerUser;
@@ -77,15 +89,22 @@ const getAllTweets = () => {
   return db
     .query(
       `
-  SELECT tweets.*, users.first_name, users.last_name, users.username, users.profile_picture_url FROM tweets 
+  SELECT tweets.id, tweets.user_id AS "userId", tweets.content, tweets.tweet_date AS "tweetDate", users.first_name AS "firstName", users.last_name AS "lastName", users.username, users.profile_picture_url AS "profilePictureURL",
+  (SELECT COUNT(*) FROM favourites
+  WHERE tweet_id = tweets.id
+  ) AS "tweetFavourites"
+  FROM tweets 
   JOIN users ON user_id = users.id
-  ORDER BY tweet_date DESC;
+  ORDER BY tweet_date DESC;  
   `
     )
     .then((res) => {
       return res.rows;
     })
-    .catch((error) => console.log("error: ", error));
+    .catch((error) => {
+      console.log("error: ", error);
+      throw new Error(error);
+    });
 };
 
 exports.getAllTweets = getAllTweets;
