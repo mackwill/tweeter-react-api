@@ -123,3 +123,71 @@ const newTweet = (tweetContent, userId) => {
 };
 
 exports.newTweet = newTweet;
+
+const doesUserLikeTweet = (tweetId, userId) => {
+  return db
+    .query(
+      `
+  SELECT * FROM favourites
+  WHERE user_id = $1
+  AND tweet_id = $2
+  `,
+      [userId, tweetId]
+    )
+    .then((res) => {
+      console.log("doesUserLikeTweet res", res.rows);
+      return res.rows;
+    })
+    .catch((error) => {
+      console.log("Error: ", error);
+      throw new Error(error);
+    });
+};
+
+exports.doesUserLikeTweet = doesUserLikeTweet;
+
+const favouriteTweet = (tweetId, userId) => {
+  return db
+    .query(
+      `
+    INSERT INTO favourites (user_id, tweet_id)
+    VALUES ($1, $2)
+    RETURNING *;
+    `,
+      [userId, tweetId]
+    )
+    .then((res) => res.rows[0])
+    .catch((error) => {
+      console.log("Error: ", error);
+      throw new Error(error);
+    });
+};
+
+exports.favouriteTweet = favouriteTweet;
+
+const unFavouriteTweet = (tweetId, userId) => {
+  return db.query(
+    `
+  DELETE FROM favourites
+  WHERE user_id = $1
+  AND tweet_id = $2
+  `,
+    [userId, tweetId]
+  );
+};
+
+exports.unFavouriteTweet = unFavouriteTweet;
+
+const getTweetFavouriteCount = (tweetId) => {
+  return db
+    .query(
+      `
+  SELECT COUNT(*) FROM favourites
+  WHERE tweet_id = $1
+  `,
+      [tweetId]
+    )
+    .then((res) => res.rows[0]);
+};
+
+exports.getTweetFavouriteCount = getTweetFavouriteCount;
