@@ -28,7 +28,6 @@ module.exports = () => {
       })
 
       .then((tweets) => {
-        console.log("tweets:", tweets);
         res.status(200);
         res.json(tweets);
       })
