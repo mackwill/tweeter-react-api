@@ -109,6 +109,30 @@ const getAllTweets = () => {
 
 exports.getAllTweets = getAllTweets;
 
+const getTweetsForUser = (userId) => {
+  return db
+    .query(
+      `
+  SELECT tweets.id, tweets.user_id AS "userId", tweets.content, tweets.tweet_date AS "tweetDate", users.first_name AS "firstName", users.last_name AS "lastName", users.username, users.profile_picture_url AS "profilePictureURL",
+  (SELECT COUNT(*) FROM favourites
+  WHERE tweet_id = tweets.id
+  ) AS "tweetFavourites"
+  FROM tweets 
+  JOIN users ON user_id = users.id
+  WHERE tweets.user_id = $1
+  ORDER BY tweet_date DESC; 
+  `,
+      [userId]
+    )
+    .then((res) => res.rows)
+    .catch((error) => {
+      console.log("Error getting tweets for user: ", error);
+      throw new Error(error);
+    });
+};
+
+exports.getTweetsForUser = getTweetsForUser;
+
 const newTweet = (tweetContent, userId) => {
   return db
     .query(

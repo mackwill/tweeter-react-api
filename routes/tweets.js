@@ -3,8 +3,22 @@ const database = require("../database");
 const authenticate = require("../helpers/authenticateToken");
 
 module.exports = () => {
+  router.get("/tweets/user/:id", (req, res) => {
+    const userId = req.params.id;
+    return database
+      .getTweetsForUser(userId)
+      .then((tweets) => {
+        res.status(200);
+        res.json(tweets);
+      })
+      .catch((error) => {
+        res.status(500);
+        console.error("Error getting tweets for user: ", error);
+        res.send(error);
+      });
+  });
+
   router.get("/tweets", (req, res) => {
-    console.log("herere");
     return database
       .getAllTweets()
       .then((tweets) => {
